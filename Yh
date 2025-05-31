@@ -1,7 +1,7 @@
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library/main/Library", true))()
 
 local window = library:AddWindow("Godlike", {
-    window.Image = "rbxassetid://2851926732"
+    Window.Image = "https://www.roblox.com/Thumbs/Asset.ashx?width=420&height=420&assetId=131147155125167"
     min_size = Vector2.new(470, 470),
     can_resize = false,
 })
