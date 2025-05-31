@@ -4,5 +4,4 @@ local window = library:AddWindow("MoonHub-Elerium-Paid", {
     main_color = Color3.fromRGB(0, 0, 0),
     min_size = Vector2.new(470, 470),
     can_resize = false,
-    Window.Image = "rbxassetid://9187413508"
 })
