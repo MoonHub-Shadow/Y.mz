@@ -22,7 +22,7 @@ folder1:AddSwitch("Night Time", function(Value)
   if Nighttime then
     game.Lighting.TimeOfDay = "00:00:00"
   else
-    game.Lighting.TimeOfDay = "00:00:00"
+    game.Lighting.TimeOfDay = "12:00:00"
   end
 end)
 
@@ -31,7 +31,7 @@ folder1:AddSwitch("Dawn", function(Value)
   if Dawn then
     game.Lighting.TimeOfDay = "09:00:00"
   else
-    game.Lighting.TimeOfDay = "09:00:00"
+    game.Lighting.TimeOfDay = "12:00:00"
   end
 end)
 
