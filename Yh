@@ -35,7 +35,7 @@ folder1:AddSwitch("Dawn", function(Value)
   end
 end)
 
-local folder2 = Main:AddTab("Performance")
+local folder2 = Main:AddFolder("Performance")
 
 folder2:AddButton("Less Lag", function()
     for _, v in pairs(game:GetDescendants()) do
