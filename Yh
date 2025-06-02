@@ -9,17 +9,17 @@ local Main = window:AddTab("Main")
 local folder1 = Main:AddFolder("Time Of Day")
 
 folder1:AddSwitch("Day Time", function(Value)
-  Daytime = value
-  if daytime then
-  game.Lighting.TimeOfDay = "12:00:00"
+  Daytime = Value
+  if Daytime then
+    game.Lighting.TimeOfDay = "12:00:00"
   else
     game.Lighting.TimeOfDay = "12:00:00"
   end
-  end)
+end)
   
 folder1:AddSwitch("Night Time", function(Value)
-  nighttime = state
-  if nighttime then
+  Nighttime = Value
+  if Nighttime then
     game.Lighting.TimeOfDay = "00:00:00"
   else
     game.Lighting.TimeOfDay = "00:00:00"
@@ -27,11 +27,11 @@ folder1:AddSwitch("Night Time", function(Value)
 end)
 
 folder1:AddSwitch("Dawn", function(Value)
-  dawn = Value
-  if dawn then
+  Dawn = Value
+  if Dawn then
     game.Lighting.TimeOfDay = "09:00:00"
   else
-      game.Lighting.TimeOfDay = "09:00:00"
+    game.Lighting.TimeOfDay = "09:00:00"
   end
 end)
 
@@ -39,250 +39,192 @@ local folder2 = Main:AddTab("Performance")
 
 folder2:AddButton("Less Lag", function()
     for _, v in pairs(game:GetDescendants()) do
-
         if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
-
             v.Enabled = false
-
         end
-
     end
-
     local lighting = game:GetService("Lighting")
-
     lighting.GlobalShadows = false
-
     lighting.FogEnd = 9e9
-
     for _, v in pairs(workspace:GetDescendants()) do
-
         if v:IsA("BasePart") and not v.Parent:FindFirstChild("Humanoid") then
-
             v.Material = Enum.Material.SmoothPlastic
-
             if v:IsA("Texture") then
-
                 v:Destroy()
-
             end
-
         end
-
     end
-
     settings().Rendering.QualityLevel = 1
-
 end)
 
-folder2:AddButton("FPS", function(Value)
+folder2:AddButton("FPS", function()
     RemoveLag()
-            cleanupLoop = task.spawn(function()
-
-                while Value do
-                    wait(50)
-                    RemoveLag()
-                end
-
-            end)
-
-        else
-            if cleanupLoop then
-
-                task.cancel(cleanupLoop)
-                cleanupLoop = nil
-
+    if cleanupLoop then
+        task.cancel(cleanupLoop)
+        cleanupLoop = nil
+    else
+        cleanupLoop = task.spawn(function()
+            while true do
+                wait(50)
+                RemoveLag()
             end
-
-        end
-
-    end)
-
+        end)
+    end
+end)
 
 local AutoFarm = window:AddTab("Auto Farm")
 local folder3 = AutoFarm:AddFolder("Auto Farm")
 
 folder3:AddSwitch("Auto Swing", function(state)
-    autoswing = state
-    if autoswing then
-        _G.swing = state
-    wait()
-    while _G.swing do
-        wait()
-        local args = { [1] = "swingKatana" }
-        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
-    end
-end)
-    
-folder3:AddSwitch("Auto Farm Chi", function(state)  
-    autofarmchi = state
-    if autofarmchi then
-        _G.c = state
-    wait()
-    while _G.c do
-        wait()
-        for _, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
-            if v.Name == "Blue Chi Crate" then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
-                wait(0.3)
-            end
+    _G.swing = state
+    if _G.swing then
+        while _G.swing do
+            wait()
+            local args = { [1] = "swingKatana" }
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
         end
     end
 end)
-    
-    
-folder3:AddSwitch("Auto Farm Coins", function(state)  
-autofarmcoins = state
-if autofarmcoins then
-_G.co = state
-    wait()
-    while _G.co do
-        wait()
-        for _, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
-            if v.Name == "Purple Coin Crate" then
-                game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
-                wait(0.3)
-            end
-        end
-    end
-end)    
-    
-folder3:AddSwitch("Auto Buy Hoops", function(state)
-autobuyhoops = state
-if autobuyhoops then
-_G.hoops = state
-    wait()
-    while _G.hoops do
-        wait()
-        local plr = game.Players.LocalPlayer
-        for _, v in pairs(workspace.Hoops:GetDescendants()) do
-            if v.ClassName == "MeshPart" then
-                v.touchPart.CFrame = plr.Character.HumanoidRootPart.CFrame
-            end
-        end
-    end
-end)    
-    
-    
 
-    
-folder3:AddSwitch("Auto Sell", function(state)
-autosell = state
-    if autosell then
-        _G.sell = state
-    wait()
-    while _G.sell do
-        wait()
-        game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
-        wait()
-        game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Workspace.Part.CFrame
+folder3:AddSwitch("Auto Farm Chi", function(state)
+    _G.c = state
+    if _G.c then
+        while _G.c do
+            wait()
+            for _, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
+                if v.Name == "Blue Chi Crate" then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
+                    wait(0.3)
+                end
+            end
+        end
     end
 end)
-    
-    
-folder3:AddSwitch("Auto Sell When Full", function(state)
-    sellwhenfull = state
-    if sellwhenfull then
-        _G.sell = state
-    wait()
-    while _G.sell do
-        wait()
-        if game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible then
+
+folder3:AddSwitch("Auto Farm Coins", function(state)
+    _G.co = state
+    if _G.co then
+        while _G.co do
+            wait()
+            for _, v in pairs(game.Workspace.spawnedCoins.Valley:GetChildren()) do
+                if v.Name == "Purple Coin Crate" then
+                    game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(v.Position)
+                    wait(0.3)
+                end
+            end
+        end
+    end
+end)
+
+folder3:AddSwitch("Auto Buy Hoops", function(state)
+    _G.hoops = state
+    if _G.hoops then
+        while _G.hoops do
+            wait()
+            local plr = game.Players.LocalPlayer
+            for _, v in pairs(workspace.Hoops:GetDescendants()) do
+                if v.ClassName == "MeshPart" then
+                    v.touchPart.CFrame = plr.Character.HumanoidRootPart.CFrame
+                end
+            end
+        end
+    end
+end)
+
+folder3:AddSwitch("Auto Sell", function(state)
+    _G.sell = state
+    if _G.sell then
+        while _G.sell do
+            wait()
             game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
             wait()
             game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Workspace.Part.CFrame
         end
     end
 end)
-    
-    
-local folder4 = AutoFarm:AddFolder("Auto Buy") 
-    
-folder4:AddSwitch("Auto Buy Swords", function(state)
-autobuyswords = state
-if autobuyswords then
-_G.sw = state
-wait()
-while _G.sw do
-wait()
-local args = {
-[1] = "buyAllSwords",
-[2] = "Blazing Vortex Island"
-}
-game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
-end
-end)
-    
-    
-folder4:AddSwitch("Auto Buy Belts", function(state)
-    autobuybelts = state
-    if autobuybelts then
-     _G.sw = state
-    wait()
-    while _G.sw do
-        wait()
-        local args = {
-            [1] = "buyAllBelts",
-            [2] = "Blazing Vortex Island"
-        }
-        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
-    end
-end)
-    
-    
-folder4:AddSwitch("Auto Buy Skills", function(state)  
-    autobuyskills = state
-    if autobuyskills then
-        _G.sk = state
-    wait()
-    while _G.sk do
-        wait()
-        local args = {
-            [1] = "buyAllSkills",
-            [2] = "Blazing Vortex Island"
-        }
-        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
-    end
-end)
-    
-    
-folder4:AddSwitch("Auto Buy Ranks", function(state) 
-    autobuyranks = state
-    if autobuyranks then
-        _G.r = state
-    wait()
-    while _G.r do
-        wait()
-        local oh1 = "buyRank"
-        local oh2 = game:GetService("ReplicatedStorage").Ranks.Ground:GetChildren()
-        for i = 1, #oh2 do
-            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i].Name)
+
+folder3:AddSwitch("Auto Sell When Full", function(state)
+    _G.sellwhenfull = state
+    if _G.sellwhenfull then
+        while _G.sellwhenfull do
+            wait()
+            if game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible then
+                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+                wait()
+                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Workspace.Part.CFrame
+            end
         end
     end
 end)
-    
-    
-folder4:AddSwitch("Auto Buy Shurikens", function(state)
-autobuyshurikens = state
-if autobuyshurikens then
-_G.sh = state
-    wait()
-    while _G.sh do
-        wait()
-        local args = {
-            [1] = "buyAllShurikens",
-            [2] = "Blazing Vortex Island"
-        }
-        game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
+
+local folder4 = AutoFarm:AddFolder("Auto Buy")
+
+folder4:AddSwitch("Auto Buy Swords", function(state)
+    _G.sw = state
+    if _G.sw then
+        while _G.sw do
+            wait()
+            local args = {
+                [1] = "buyAllSwords",
+                [2] = "Blazing Vortex Island"
+            }
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
+        end
     end
 end)
-    
-    
-    
-    
-    
-    
 
-    
+folder4:AddSwitch("Auto Buy Belts", function(state)
+    _G.belts = state
+    if _G.belts then
+        while _G.belts do
+            wait()
+            local args = {
+                [1] = "buyAllBelts",
+                [2] = "Blazing Vortex Island"
+            }
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
+        end
+    end
+end)
 
-        
-  
+folder4:AddSwitch("Auto Buy Skills", function(state)
+    _G.sk = state
+    if _G.sk then
+        while _G.sk do
+            wait()
+            local args = {
+                [1] = "buyAllSkills",
+                [2] = "Blazing Vortex Island"
+            }
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
+        end
+    end
+end)
+
+folder4:AddSwitch("Auto Buy Ranks", function(state)
+    _G.r = state
+    if _G.r then
+        while _G.r do
+            wait()
+            local oh1 = "buyRank"
+            local oh2 = game:GetService("ReplicatedStorage").Ranks.Ground:GetChildren()
+            for i = 1, #oh2 do
+                game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(oh1, oh2[i].Name)
+            end
+        end
+    end
+end)
+
+folder4:AddSwitch("Auto Buy Shurikens", function(state)
+    _G.sh = state
+    if _G.sh then
+        while _G.sh do
+            wait()
+            local args = {
+                [1] = "buyAllShurikens",
+                [2] = "Blazing Vortex Island"
+            }
+            game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
+        end
+    end
+end)
