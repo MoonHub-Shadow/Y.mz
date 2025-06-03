@@ -1,8 +1,8 @@
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library/main/Library", true))()
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/iblameaabis/Ililililililililililililil/refs/heads/main/W%20UI", true))()
 
-local window = library:AddWindow("Enchanted|NinjaLegends", {
-    main_color = Color3.fromRGB(0, 0, 0),
-    min_size = Vector2.new(470, 470),
+local window = library:AddWindow("Enchanted Hub | Paid Version", {
+    main_color = Color3.fromRGB(1, 2, 3),
+    min_size = Vector2.new(655, 650),
     can_resize = false,
 })
 local Main = window:AddTab("Main")
@@ -37,7 +37,11 @@ end)
 
 local folder2 = Main:AddFolder("Performance")
 
-folder2:AddButton("Less Lag", function()
+local cleanupLoop = nil
+local hideallframes = nil
+local hideframes = false
+
+local function RemoveLag()
     for _, v in pairs(game:GetDescendants()) do
         if v:IsA("ParticleEmitter") or v:IsA("Trail") or v:IsA("Smoke") or v:IsA("Fire") or v:IsA("Sparkles") then
             v.Enabled = false
@@ -55,6 +59,10 @@ folder2:AddButton("Less Lag", function()
         end
     end
     settings().Rendering.QualityLevel = 1
+end
+
+folder2:AddButton("Less Lag", function()
+    RemoveLag()
 end)
 
 folder2:AddButton("FPS", function()
@@ -75,14 +83,22 @@ folder2:AddSwitch("Hide Frames", function(Value)
     hideframes = Value
     if hideframes then
         local rSto = game:GetService("ReplicatedStorage")
-		for _, obj in pairs(rSto:GetChildren()) do
-			if obj.Name:match("Frame$") then
-				obj.Visible = not Value
-			end
-		end
-	end
+        for _, obj in pairs(rSto:GetChildren()) do
+            if obj.Name:match("Frame$") then
+                obj.Visible = false
+            end
+        end
+    else
+        local rSto = game:GetService("ReplicatedStorage")
+        for _, obj in pairs(rSto:GetChildren()) do
+            if obj.Name:match("Frame$") then
+                obj.Visible = true
+            end
+        end
+    end
     if hideallframes then
         task.cancel(hideallframes)
+        hideallframes = nil
     end
 end)
 
@@ -137,7 +153,7 @@ folder3:AddSwitch("Auto Buy Hoops", function(state)
             wait()
             local plr = game.Players.LocalPlayer
             for _, v in pairs(workspace.Hoops:GetDescendants()) do
-                if v.ClassName == "MeshPart" then
+                if v.ClassName == "MeshPart" and v.touchPart then
                     v.touchPart.CFrame = plr.Character.HumanoidRootPart.CFrame
                 end
             end
@@ -150,9 +166,13 @@ folder3:AddSwitch("Auto Sell", function(state)
     if _G.sell then
         while _G.sell do
             wait()
-            game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+            local player = game.Players.LocalPlayer
+            local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+            if hrp then
+                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = hrp.CFrame
+            end
             wait()
-            game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Workspace.Part.CFrame
+            game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = CFrame.new(0, -1000, 0)
         end
     end
 end)
@@ -162,10 +182,15 @@ folder3:AddSwitch("Auto Sell When Full", function(state)
     if _G.sell then
         while _G.sell do
             wait()
-            if game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible then
-                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+            local player = game.Players.LocalPlayer
+            local gui = player.PlayerGui and player.PlayerGui:FindFirstChild("gameGui")
+            if gui and gui.maxNinjitsuMenu and gui.maxNinjitsuMenu.Visible then
+                local hrp = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+                if hrp then
+                    game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = hrp.CFrame
+                end
                 wait()
-                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Workspace.Part.CFrame
+                game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = CFrame.new(0, -1000, 0)
             end
         end
     end
@@ -273,15 +298,14 @@ local petTypes = {
 }
 
 for petName, buttonTitle in pairs(petTypes) do
-folder6:AddButton(buttonTitle, function()
-unequipAllPets()
-			for _, pet in pairs(game:GetService("Players").LocalPlayer.petsFolder.Unique:GetChildren()) do
-				if pet.Name == petName then
-					game:GetService("ReplicatedStorage").rEvents.equipPetEvent:fireServer("equipPet", pet)
-				end
-			end
-		end
-	)
+    folder6:AddButton(buttonTitle, function()
+        unequipAllPets()
+        for _, pet in pairs(game:GetService("Players").LocalPlayer.petsFolder.Unique:GetChildren()) do
+            if pet.Name == petName then
+                game:GetService("ReplicatedStorage").rEvents.equipPetEvent:FireServer("equipPet", pet)
+            end
+        end
+    end)
 end
 
 folder6:AddSwitch("Auto Evolve Pets", function(Value)
@@ -317,10 +341,9 @@ local elements = {
     ["Eternity Storm"] = "Buy Eternity Storm",
     ["Blazing Entity"] = "Buy Blazing Entity"
 }
-    for _, element in ipairs(elements) do
-        game.ReplicatedStorage.rEvents.elementMasteryEvent:FireServer(element)
-    end
-end)
+for _, element in pairs(elements) do
+    game.ReplicatedStorage.rEvents.elementMasteryEvent:FireServer(element)
+end
 
 local MiscV3 = window:AddTab("Misc V3")
 local folder8 = MiscV3:AddFolder("Misc V3")
@@ -350,7 +373,10 @@ folder8:AddSwitch("Infinite Jump", function(state)
         local InfiniteJumpEnabled = true
         game:GetService("UserInputService").JumpRequest:Connect(function()
             if InfiniteJumpEnabled then
-                game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+                local humanoid = game:GetService("Players").LocalPlayer.Character and game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass'Humanoid'
+                if humanoid then
+                    humanoid:ChangeState("Jumping")
+                end
             end
         end)
         if infinitejump then
@@ -367,7 +393,7 @@ end)
     
 folder8:AddButton("Unlock All Islands", function()
     for _, v in next, game.workspace.islandUnlockParts:GetChildren() do
-        if v then
+        if v and v:IsA("BasePart") and v:FindFirstChild("islandSignPart") then
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.islandSignPart.CFrame
             wait(0.2)
         end
@@ -391,7 +417,7 @@ folder11:AddLabel("Enchanted Hub is a Fast growing Script hub")
 folder11:AddLabel("Scripts they Feature: Grow a Guarden, Ml, Ninja legends, Soon Speed Legends")  
 folder11:AddLabel("Invite of Enchanted Hub below. For discord") 
 folder11:AddButton("Enchanted Hub", function()
-setclipboard("https://discord.gg/BgCgchxjJh")
+    setclipboard("https://discord.gg/BgCgchxjJh")
 end)
     
 local folder12 = Credits:AddFolder("Info On Owner")
@@ -399,11 +425,11 @@ local folder12 = Credits:AddFolder("Info On Owner")
 folder12:AddLabel("info On Owner Below") 
 
 folder12:AddButton("Discord", function()
-setclipboard("godlike_3")
+    setclipboard("godlike_3")
 end)
     
 folder12:AddButton("My Server", function()
-setclipboard("https://discord.gg/gp7GbKVQz3") 
+    setclipboard("https://discord.gg/gp7GbKVQz3") 
 end)
     
 folder12:AddLabel("SECRET PANEL COMING SOON!!!!")
