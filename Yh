@@ -35,7 +35,7 @@ folder1:AddSwitch("Dawn", function(Value)
   end
 end)
 
-local folder2 = Main:AddTab("Performance")
+local folder2 = Main:AddFolder("Performance")
 
 folder2:AddButton("Less Lag", function()
     for _, v in pairs(game:GetDescendants()) do
@@ -256,55 +256,6 @@ end)
 folder5:AddButton("Enable Trading", function()
 local args = { [1] = "enableTrading" }
     game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
-end)
-
-    
-local ServerStats = window:AddTab("Server Stats")
-local Time = ServerStats:AddLabel("Executer Time")
-
-local function UpdateTime()
-    local GameTime = math.floor(workspace.DistributedGameTime + 0.5)
-    local Hour = math.floor(GameTime / (60^2)) % 24
-    local Minute = math.floor(GameTime / 60) % 60
-    local Second = math.floor(GameTime) % 60
-    Time:Set("[GameTime] : Hours : " .. Hour .. " Minutes : " .. Minute .. " Seconds : " .. Second)
-end
-
-spawn(function()
-    while true do
-        wait()
-        pcall(function()
-            UpdateTime()
-        end)
-    end
-end)
-
-local Client = ServerStats:AddLabel("Client")
-
-local function UpdateClient()
-    local Fps = workspace:GetRealPhysicsFPS()
-    Client:Set("[Fps] : " .. Fps)
-end
-
-spawn(function()
-    while true do
-        wait(0.1)
-        UpdateClient()
-    end
-end)
-
-local Client1 = ServerStats:AddLabel("Client")
-
-local function UpdateClient1()
-    local Ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
-    Client1:Set("[Ping] : " .. Ping)
-end
-
-spawn(function()
-    while true do
-        wait(0.1)
-        UpdateClient1()
-    end
 end)
 
 
