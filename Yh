@@ -1,8 +1,8 @@
 local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/memejames/elerium-v2-ui-library/main/Library", true))()
 
 local window = library:AddWindow("Enchanted|NinjaLegends", {
-    main_color = Color3.fromRGB(0, 0, 0), -- Color
-    min_size = Vector2.new(470, 470), -- Size of the GUI
+    main_color = Color3.fromRGB(0, 0, 0),
+    min_size = Vector2.new(470, 470),
     can_resize = false,
 })
 local Main = window:AddTab("Main")
@@ -18,24 +18,24 @@ folder1:AddSwitch("Day Time", function(Value)
 end)
   
 folder1:AddSwitch("Night Time", function(Value)
-  Nighttime = Value
-  if Nighttime then
+  nighttime = Value
+  if nighttime then
     game.Lighting.TimeOfDay = "00:00:00"
   else
-    game.Lighting.TimeOfDay = "12:00:00"
+    game.Lighting.TimeOfDay = "00:00:00"
   end
 end)
 
 folder1:AddSwitch("Dawn", function(Value)
-  Dawn = Value
-  if Dawn then
+  dawn = Value
+  if dawn then
     game.Lighting.TimeOfDay = "09:00:00"
   else
-    game.Lighting.TimeOfDay = "12:00:00"
+    game.Lighting.TimeOfDay = "09:00:00"
   end
 end)
 
-local folder2 = Main:AddFolder("Performance")
+local folder2 = Main:AddTab("Performance")
 
 folder2:AddButton("Less Lag", function()
     for _, v in pairs(game:GetDescendants()) do
@@ -62,14 +62,13 @@ folder2:AddButton("FPS", function()
     if cleanupLoop then
         task.cancel(cleanupLoop)
         cleanupLoop = nil
-    else
-        cleanupLoop = task.spawn(function()
-            while true do
-                wait(50)
-                RemoveLag()
-            end
-        end)
     end
+    cleanupLoop = task.spawn(function()
+        while true do
+            wait(50)
+            RemoveLag()
+        end
+    end)
 end)
 
 local AutoFarm = window:AddTab("Auto Farm")
@@ -85,8 +84,8 @@ folder3:AddSwitch("Auto Swing", function(state)
         end
     end
 end)
-
-folder3:AddSwitch("Auto Farm Chi", function(state)
+    
+folder3:AddSwitch("Auto Farm Chi", function(state)  
     _G.c = state
     if _G.c then
         while _G.c do
@@ -100,8 +99,8 @@ folder3:AddSwitch("Auto Farm Chi", function(state)
         end
     end
 end)
-
-folder3:AddSwitch("Auto Farm Coins", function(state)
+    
+folder3:AddSwitch("Auto Farm Coins", function(state)  
     _G.co = state
     if _G.co then
         while _G.co do
@@ -114,8 +113,8 @@ folder3:AddSwitch("Auto Farm Coins", function(state)
             end
         end
     end
-end)
-
+end)    
+    
 folder3:AddSwitch("Auto Buy Hoops", function(state)
     _G.hoops = state
     if _G.hoops then
@@ -129,8 +128,8 @@ folder3:AddSwitch("Auto Buy Hoops", function(state)
             end
         end
     end
-end)
-
+end)    
+    
 folder3:AddSwitch("Auto Sell", function(state)
     _G.sell = state
     if _G.sell then
@@ -142,11 +141,11 @@ folder3:AddSwitch("Auto Sell", function(state)
         end
     end
 end)
-
+    
 folder3:AddSwitch("Auto Sell When Full", function(state)
-    _G.sellwhenfull = state
-    if _G.sellwhenfull then
-        while _G.sellwhenfull do
+    _G.sell = state
+    if _G.sell then
+        while _G.sell do
             wait()
             if game.Players.LocalPlayer.PlayerGui.gameGui.maxNinjitsuMenu.Visible then
                 game.workspace.sellAreaCircles["sellAreaCircle15"].circleInner.CFrame = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
@@ -156,9 +155,10 @@ folder3:AddSwitch("Auto Sell When Full", function(state)
         end
     end
 end)
-
-local folder4 = AutoFarm:AddFolder("Auto Buy")
-
+    
+    
+local folder4 = AutoFarm:AddFolder("Auto Buy") 
+    
 folder4:AddSwitch("Auto Buy Swords", function(state)
     _G.sw = state
     if _G.sw then
@@ -172,11 +172,11 @@ folder4:AddSwitch("Auto Buy Swords", function(state)
         end
     end
 end)
-
+    
 folder4:AddSwitch("Auto Buy Belts", function(state)
-    _G.belts = state
-    if _G.belts then
-        while _G.belts do
+    _G.sw = state
+    if _G.sw then
+        while _G.sw do
             wait()
             local args = {
                 [1] = "buyAllBelts",
@@ -186,8 +186,8 @@ folder4:AddSwitch("Auto Buy Belts", function(state)
         end
     end
 end)
-
-folder4:AddSwitch("Auto Buy Skills", function(state)
+    
+folder4:AddSwitch("Auto Buy Skills", function(state)  
     _G.sk = state
     if _G.sk then
         while _G.sk do
@@ -200,8 +200,8 @@ folder4:AddSwitch("Auto Buy Skills", function(state)
         end
     end
 end)
-
-folder4:AddSwitch("Auto Buy Ranks", function(state)
+    
+folder4:AddSwitch("Auto Buy Ranks", function(state) 
     _G.r = state
     if _G.r then
         while _G.r do
@@ -214,7 +214,7 @@ folder4:AddSwitch("Auto Buy Ranks", function(state)
         end
     end
 end)
-
+    
 folder4:AddSwitch("Auto Buy Shurikens", function(state)
     _G.sh = state
     if _G.sh then
@@ -226,5 +226,75 @@ folder4:AddSwitch("Auto Buy Shurikens", function(state)
             }
             game:GetService("Players").LocalPlayer.ninjaEvent:FireServer(unpack(args))
         end
+    end
+end)
+    
+    
+local Misc = window:AddTab("Misc") 
+local folder5 = Misc:AddFolder("Settings V2")  
+    
+folder5:AddButton("Disable Trading", function()
+ local args = { [1] = "disableTrading" }
+    game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
+end)
+    
+folder5:AddButton("Enable Trading", function()
+local args = { [1] = "enableTrading" }
+    game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
+end)
+    
+folder5:AddButton("Auto Spin Wheel", function()
+    autospinwheel = true
+    if autospinwheel then
+        game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
+        task.wait(1)
+    end
+end)
+    
+local ServerStats = window:AddTab("Server Stats")
+local Time = Main:Label("Executer Time")
+
+local function UpdateTime()
+    local GameTime = math.floor(workspace.DistributedGameTime + 0.5)
+    local Hour = math.floor(GameTime / (60^2)) % 24
+    local Minute = math.floor(GameTime / 60) % 60
+    local Second = math.floor(GameTime) % 60
+    Time:Set("[GameTime] : Hours : " .. Hour .. " Minutes : " .. Minute .. " Seconds : " .. Second)
+end
+
+spawn(function()
+    while true do
+        wait()
+        pcall(function()
+            UpdateTime()
+        end)
+    end
+end)
+
+local Client = Main:Label("Client")
+
+local function UpdateClient()
+    local Fps = workspace:GetRealPhysicsFPS()
+    Client:Set("[Fps] : " .. Fps)
+end
+
+spawn(function()
+    while true do
+        wait(0.1)
+        UpdateClient()
+    end
+end)
+
+local Client1 = Main:Label("Client")
+
+local function UpdateClient1()
+    local Ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
+    Client1:Set("[Ping] : " .. Ping)
+end
+
+spawn(function()
+    while true do
+        wait(0.1)
+        UpdateClient1()
     end
 end)
