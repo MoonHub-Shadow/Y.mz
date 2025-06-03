@@ -35,7 +35,7 @@ folder1:AddSwitch("Dawn", function(Value)
   end
 end)
 
-local folder2 = Main:AddFolder("Performance")
+local folder2 = Main:AddTab("Performance")
 
 folder2:AddButton("Less Lag", function()
     for _, v in pairs(game:GetDescendants()) do
@@ -69,6 +69,21 @@ folder2:AddButton("FPS", function()
             RemoveLag()
         end
     end)
+end)
+
+folder2:AddSwitch("Hide Frames", function(Value)
+    hideframes = Value
+    if hideframes then
+        local rSto = game:GetService("ReplicatedStorage")
+		for _, obj in pairs(rSto:GetChildren()) do
+			if obj.Name:match("Frame$") then
+				obj.Visible = not Value
+			end
+		end
+	end
+    if hideallframes then
+        task.cancel(hideallframes)
+    end
 end)
 
 local AutoFarm = window:AddTab("Auto Farm")
@@ -242,17 +257,10 @@ folder5:AddButton("Enable Trading", function()
 local args = { [1] = "enableTrading" }
     game:GetService("ReplicatedStorage").rEvents.tradingEvent:FireServer(unpack(args))
 end)
-    
-folder5:AddButton("Auto Spin Wheel", function()
-    autospinwheel = true
-    if autospinwheel then
-        game:GetService("ReplicatedStorage").rEvents.openFortuneWheelRemote:InvokeServer("openFortuneWheel", game:GetService("ReplicatedStorage").fortuneWheelChances["Fortune Wheel"])
-        task.wait(1)
-    end
-end)
+
     
 local ServerStats = window:AddTab("Server Stats")
-local Time = Main:Label("Executer Time")
+local Time = ServerStats:AddLabel("Executer Time")
 
 local function UpdateTime()
     local GameTime = math.floor(workspace.DistributedGameTime + 0.5)
@@ -271,7 +279,7 @@ spawn(function()
     end
 end)
 
-local Client = Main:Label("Client")
+local Client = ServerStats:AddLabel("Client")
 
 local function UpdateClient()
     local Fps = workspace:GetRealPhysicsFPS()
@@ -285,7 +293,7 @@ spawn(function()
     end
 end)
 
-local Client1 = Main:Label("Client")
+local Client1 = ServerStats:AddLabel("Client")
 
 local function UpdateClient1()
     local Ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValueString()
@@ -298,3 +306,153 @@ spawn(function()
         UpdateClient1()
     end
 end)
+
+
+
+local Pets = window:AddTab("Pets")
+local folder6 = Pets:AddFolder("Auto Equip")
+
+
+local petTypes = {
+    ["Twin Element Birdies"] = "Equip all TEB",
+    ["Ultra Doom Colossus"] = "Equip all UDC",
+    ["Inner Peace Legion"] = "Equip all ipl",
+    ["GLITCH: Awakened Nighthunter"] = "Equip all GAN",
+    ["Void Omega Pegasus"] = "Equip all VOP"
+}
+
+for petName, buttonTitle in pairs(petTypes) do
+folder6:AddButton(buttonTitle, function()
+unequipAllPets()
+			for _, pet in pairs(game:GetService("Players").LocalPlayer.petsFolder.Unique:GetChildren()) do
+				if pet.Name == petName then
+					game:GetService("ReplicatedStorage").rEvents.equipPetEvent:fireServer("equipPet", pet)
+				end
+			end
+		end
+	)
+end
+
+folder6:AddSwitch("Auto Evolve Pets", function(Value)
+    autoevolvepets = Value
+    if autoevolvepets then
+        _G.ePet = true
+        wait()
+        while _G.ePet do
+            wait()
+            for _, v in pairs(game:GetService("Players").LocalPlayer.petsFolder:GetChildren()) do
+                for _, x in pairs(v:GetChildren()) do
+                    local oh1 = "evolvePet"
+                    local oh2 = x.Name
+                    game:GetService("ReplicatedStorage").rEvents.petEvolveEvent:FireServer(oh1, oh2)
+                end
+            end
+        end
+    end
+end)
+
+local Elements = window:AddTab("Elements")
+local folder7 = Elements:AddFolder("Buy elements")
+    
+    
+local elements = {
+    ["Frost"] = "Buy Frost",
+    ["Inferno"] = "Buy Inferno",
+    ["Lightning"] = "Buy Lightning",
+    ["Electral Chaos"] = "Buy Electral Chaos",
+    ["Masterful Wrath"] = "Buy Masterful Wrath",
+    ["Shadow Charge"] = "Buy Shadow Charge",
+    ["Shadowfire"] = "Buy Shadowfire",
+    ["Eternity Storm"] = "Buy Eternity Storm",
+    ["Blazing Entity"] = "Buy Blazing Entity"
+}
+    for _, element in ipairs(elements) do
+        game.ReplicatedStorage.rEvents.elementMasteryEvent:FireServer(element)
+    end
+end)
+
+local MiscV3 = window:AddTab("Misc V3")
+local folder8 = MiscV3:AddFolder("Misc V3")
+
+
+folder8:AddSwitch("Invisibility", function(state)
+    invisibility = state
+    if invisibility then
+        _G.invis = true
+        wait()
+        while _G.invis do
+            wait()
+            local A_1 = "goInvisible"
+            local Event = game.Players.LocalPlayer.ninjaEvent
+            Event:FireServer(A_1)
+        end
+        if invisibility then
+            task.cancel(_G.invis)
+        end
+    end
+end)
+
+folder8:AddSwitch("Infinite Jump", function(state)
+    infinitejump = state
+    if infinitejump then
+        _G.iJumps = true
+        local InfiniteJumpEnabled = true
+        game:GetService("UserInputService").JumpRequest:Connect(function()
+            if InfiniteJumpEnabled then
+                game:GetService("Players").LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+            end
+        end)
+        if infinitejump then
+            task.cancel(_G.iJumps)
+        end
+    end
+end)    
+    
+folder8:AddButton("Rejoin", function()
+    local ts = game:GetService("TeleportService")
+    local p = game:GetService("Players").LocalPlayer
+    ts:Teleport(game.PlaceId, p)
+end)
+    
+folder8:AddButton("Unlock All Islands", function()
+    for _, v in next, game.workspace.islandUnlockParts:GetChildren() do
+        if v then
+            game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = v.islandSignPart.CFrame
+            wait(0.2)
+        end
+    end
+end)
+    
+    
+local Credits = window:AddTab("Credits")  
+local folder9 = Credits:AddFolder("Developer") 
+    
+folder9:AddLabel("Godlike: Script Maker")
+    
+local folder10 = Credits:AddFolder("Enchanted")   
+    
+folder10:AddLabel("Made For: Enchanted Hub")
+folder10:AddLabel("Best Current Ninja Legends Script")  
+    
+local folder11 = Credits:AddFolder("Info on Enchanted Hub")  
+    
+folder11:AddLabel("Enchanted Hub is a Fast growing Script hub") 
+folder11:AddLabel("Scripts they Feature: Grow a Guarden, Ml, Ninja legends, Soon Speed Legends")  
+folder11:AddLabel("Invite of Enchanted Hub below. For discord") 
+folder11:AddButton("Enchanted Hub", function()
+setclipboard("https://discord.gg/BgCgchxjJh")
+end)
+    
+local folder12 = Credits:AddFolder("Info On Owner")
+    
+folder12:AddLabel("info On Owner Below") 
+
+folder12:AddButton("Discord", function()
+setclipboard("godlike_3")
+end)
+    
+folder12:AddButton("My Server", function()
+setclipboard("https://discord.gg/gp7GbKVQz3") 
+end)
+    
+folder12:AddLabel("SECRET PANEL COMING SOON!!!!")
